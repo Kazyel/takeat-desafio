@@ -4,15 +4,16 @@ import { GoogleGenAI } from "@google/genai";
 import { getGeminiConfig } from "@/lib/config/gemini";
 import { CLASSIFICATION_PROMPT } from "@/lib/config/prompt";
 
+function extractCleanJson(text: string): string {
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error("Nenhum JSON encontrado na resposta");
+
+  return match[0].replace(/,(\s*})/g, "$1");
+}
+
 function parseGeminiResponse(response: string): ClassificationResponse {
   try {
-    let cleanedResponse = response
-      .trim()
-      .replace(/```json\n?/g, "")
-      .replace(/```\n?/g, "")
-      .trim();
-
-    const parsedResponse = JSON.parse(cleanedResponse);
+    const parsedResponse = JSON.parse(extractCleanJson(response));
 
     if (!Object.values(Categories).includes(parsedResponse.category)) {
       throw new Error(`Categoria inválida: ${parsedResponse.category}`);

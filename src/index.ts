@@ -8,7 +8,7 @@ import { classifyRoute } from "@/routes/classify";
 import { validateRoute } from "@/routes/validate";
 import { metricsRoute } from "@/routes/metrics";
 
-const app = new Hono();
+const app = new Hono().basePath("/api/v1");
 
 app.use("*", cors());
 app.use("*", logger());
@@ -28,6 +28,15 @@ app.get("/", (c) => {
     },
     categories: ["PEDIDO_CARDAPIO", "STATUS_ENTREGA", "RECLAMACAO", "ELOGIO", "OUTROS"],
     documentation: "Consulte o README.md e API.md para mais informações",
+  });
+});
+
+app.get("/health", async (c) => {
+  return c.json({
+    status: "ok",
+    uptime: Math.floor(process.uptime()),
+    service: "Classificador de Intenções - API",
+    version: "1.0.0",
   });
 });
 
