@@ -1,0 +1,131 @@
+{
+  "description": "Exemplos de conversas de clientes com restaurantes para validação do classificador de intenções",
+  "categories": ["PEDIDO_CARDAPIO", "STATUS_ENTREGA", "RECLAMACAO", "ELOGIO", "OUTROS"],
+  "conversations": [
+    {
+      "id": 1,
+      "message": "Oi, queria saber se vocês têm pizza de calabresa no cardápio",
+      "expected_category": "PEDIDO_CARDAPIO"
+    },
+    {
+      "id": 2,
+      "message": "Quanto custa o combo de hambúrguer com batata frita?",
+      "expected_category": "PEDIDO_CARDAPIO"
+    },
+    {
+      "id": 3,
+      "message": "Vocês fazem entrega de açaí? Quero pedir um de 500ml com granola",
+      "expected_category": "PEDIDO_CARDAPIO"
+    },
+    {
+      "id": 4,
+      "message": "Tem opção vegetariana no menu? Minha esposa não come carne",
+      "expected_category": "PEDIDO_CARDAPIO"
+    },
+    {
+      "id": 5,
+      "message": "Quero fazer um pedido: 2 pizzas grandes, uma de mussarela e outra de frango com catupiry",
+      "expected_category": "PEDIDO_CARDAPIO"
+    },
+    {
+      "id": 6,
+      "message": "Meu pedido já saiu pra entrega? Fiz há 40 minutos",
+      "expected_category": "STATUS_ENTREGA"
+    },
+    {
+      "id": 7,
+      "message": "Qual a previsão de chegada do meu lanche? Tô esperando faz tempo",
+      "expected_category": "STATUS_ENTREGA"
+    },
+    {
+      "id": 8,
+      "message": "O motoboy já saiu aí? Preciso saber se dá tempo de descer",
+      "expected_category": "STATUS_ENTREGA"
+    },
+    {
+      "id": 9,
+      "message": "Cadê meu pedido número 1234? No app ainda tá como preparando",
+      "expected_category": "STATUS_ENTREGA"
+    },
+    {
+      "id": 10,
+      "message": "Vocês podem me passar o contato do entregador? Ele não tá achando meu prédio",
+      "expected_category": "STATUS_ENTREGA"
+    },
+    {
+      "id": 11,
+      "message": "Que absurdo! Pedi uma pizza há 2 horas e até agora nada. Isso é falta de respeito!",
+      "expected_category": "RECLAMACAO"
+    },
+    {
+      "id": 12,
+      "message": "Meu lanche veio todo amassado e frio. Quero meu dinheiro de volta",
+      "expected_category": "RECLAMACAO"
+    },
+    {
+      "id": 13,
+      "message": "Pedi sem cebola e veio cheio de cebola. Tenho alergia, isso é muito grave!",
+      "expected_category": "RECLAMACAO"
+    },
+    {
+      "id": 14,
+      "message": "O refrigerante veio estourado e molhou toda a sacola. Péssimo serviço",
+      "expected_category": "RECLAMACAO"
+    },
+    {
+      "id": 15,
+      "message": "Vocês erraram meu pedido de novo. É a terceira vez esse mês, vou procurar outro restaurante",
+      "expected_category": "RECLAMACAO"
+    },
+    {
+      "id": 16,
+      "message": "Gente, a pizza de vocês é MARAVILHOSA! Melhor que já comi na vida",
+      "expected_category": "ELOGIO"
+    },
+    {
+      "id": 17,
+      "message": "Quero parabenizar o atendimento, muito educados e prestativos. Nota 10!",
+      "expected_category": "ELOGIO"
+    },
+    {
+      "id": 18,
+      "message": "Entrega super rápida e comida quentinha. Virei cliente fiel!",
+      "expected_category": "ELOGIO"
+    },
+    {
+      "id": 19,
+      "message": "O hambúrguer artesanal é sensacional, parabéns ao chef! Vou indicar pra todo mundo",
+      "expected_category": "ELOGIO"
+    },
+    {
+      "id": 20,
+      "message": "Amei a embalagem sustentável de vocês. Além de gostoso, se preocupam com o meio ambiente ❤️",
+      "expected_category": "ELOGIO"
+    },
+    {
+      "id": 21,
+      "message": "Boa noite! Tudo bem?",
+      "expected_category": "OUTROS"
+    },
+    {
+      "id": 22,
+      "message": "Vocês estão contratando? Tenho experiência como garçom",
+      "expected_category": "OUTROS"
+    },
+    {
+      "id": 23,
+      "message": "Qual o horário de funcionamento de vocês no domingo?",
+      "expected_category": "OUTROS"
+    },
+    {
+      "id": 24,
+      "message": "Aceitam vale refeição? E Pix?",
+      "expected_category": "OUTROS"
+    },
+    {
+      "id": 25,
+      "message": "Oi, esse número é do restaurante mesmo? Achei no Google",
+      "expected_category": "OUTROS"
+    }
+  ]
+}
