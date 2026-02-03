@@ -6,18 +6,16 @@ import { classifyMessage, testGeminiConnection } from "@/services/gemini-service
 export const classifyRoute = new Hono();
 
 /**
- * GET /health
- * Health check da API
+ * GET /check
+ * Check do endpoint de classificação para testar conexão com o Gemini
  */
 
-classifyRoute.get("/health", async (c) => {
+classifyRoute.get("/check", async (c) => {
   const isConnected = await testGeminiConnection();
 
   return c.json({
     status: isConnected ? "ok" : "error",
     timestamp: new Date().toISOString(),
-    service: "Classificador de Intenções - API",
-    version: "1.0.0",
   });
 });
 

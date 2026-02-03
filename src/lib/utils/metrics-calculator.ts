@@ -5,6 +5,16 @@ import {
   type ValidationResult,
 } from "@/lib/types";
 
+type MetricsMap = Map<
+  Categories,
+  {
+    truePositives: number;
+    falsePositives: number;
+    falseNegatives: number;
+    samples: number;
+  }
+>;
+
 const getUniqueCategories = () => {
   return [
     Categories.PedidoCardapio,
@@ -15,40 +25,59 @@ const getUniqueCategories = () => {
   ];
 };
 
-const calculateCategoryMetrics = (results: ValidationResult[]): CategoryMetrics[] => {
+const getMetricsMap = (results: ValidationResult[]) => {
   const categories = getUniqueCategories();
 
-  return categories.map((category) => {
-    const expectedThisCategory = results.filter((r) => r.expected === category);
+  const metricsMap: MetricsMap = new Map();
 
-    const truePositives = results.filter(
-      (r) => r.expected === category && r.predicted === category
-    ).length;
+  categories.forEach((cat) => {
+    metricsMap.set(cat, {
+      truePositives: 0,
+      falsePositives: 0,
+      falseNegatives: 0,
+      samples: 0,
+    });
+  });
 
-    const falsePositives = results.filter(
-      (r) => r.expected !== category && r.predicted === category
-    ).length;
+  results.forEach((result) => {
+    const { expected, predicted } = result;
 
-    const falseNegatives = results.filter(
-      (r) => r.expected === category && r.predicted !== category
-    ).length;
+    const metrics = metricsMap.get(expected)!;
+    metrics.samples++;
+
+    if (predicted === expected) {
+      metrics.truePositives++;
+    } else {
+      metrics.falseNegatives++;
+      metricsMap.get(predicted)!.falsePositives++;
+    }
+  });
+
+  return metricsMap;
+};
+
+const calculateCategoryMetrics = (results: ValidationResult[]): CategoryMetrics[] => {
+  const metricsMap = getMetricsMap(results);
+  const categories = getUniqueCategories();
+
+  const metrics = categories.map((category) => {
+    const { truePositives, falsePositives, falseNegatives, samples } =
+      metricsMap.get(category)!;
 
     const precision =
       truePositives + falsePositives > 0
-        ? Math.round((truePositives / (truePositives + falsePositives)) * 100 * 100) / 100
+        ? Number(((truePositives / (truePositives + falsePositives)) * 100).toFixed(2))
         : 0;
 
     const recall =
       truePositives + falseNegatives > 0
-        ? Math.round((truePositives / (truePositives + falseNegatives)) * 100 * 100) / 100
+        ? Number(((truePositives / (truePositives + falseNegatives)) * 100).toFixed(2))
         : 0;
 
     const f1Score =
       precision + recall > 0
         ? Math.round(((2 * precision * recall) / (precision + recall)) * 100) / 100
         : 0;
-
-    const samples = expectedThisCategory.length;
 
     return {
       category,
@@ -58,6 +87,8 @@ const calculateCategoryMetrics = (results: ValidationResult[]): CategoryMetrics[
       samples,
     };
   });
+
+  return metrics;
 };
 
 export function calculateMetrics(results: ValidationResult[]): MetricsResponse {

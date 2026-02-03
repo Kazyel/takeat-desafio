@@ -59,6 +59,10 @@ Sua tarefa é analisar mensagens e classificá-las em UMA das seguintes categori
 
 **IMPORTANTE:**
 - Responda APENAS com o JSON, sem texto adicional
+- RETORNE APENAS JSON VÁLIDO, SEM TEXTO EXTRA.
+- SEM VÍRGULAS FINAIS.
+- Use ASPAS DUPLAS em todas as chaves.
+- Não inclua comentários.
 - Use exatamente os nomes das categorias acima
 - O confidence deve ser um número decimal entre 0 e 1
 `;
