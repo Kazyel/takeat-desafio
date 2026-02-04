@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import type { APIErrorResponse } from "@/lib/types/api";
 import { calculateDetailedMetrics } from "@/services/validation-service";
 
 export const metricsRoute = new Hono();
@@ -9,19 +10,19 @@ export const metricsRoute = new Hono();
  */
 
 metricsRoute.get("/", async (c) => {
-  try {
-    const metrics = await calculateDetailedMetrics();
+	try {
+		const metrics = await calculateDetailedMetrics();
 
-    return c.json(metrics);
-  } catch (error) {
-    console.log("Erro no endpoint /metrics:", error);
+		return c.json(metrics);
+	} catch (error) {
+		console.log("Erro no endpoint /metrics:", error);
 
-    return c.json(
-      {
-        error: "Internal Server Error",
-        message: "Erro ao calcular métricas",
-      },
-      500
-    );
-  }
+		return c.json<APIErrorResponse>(
+			{
+				error: "Internal Server Error",
+				message: "Erro ao calcular métricas",
+			},
+			500,
+		);
+	}
 });

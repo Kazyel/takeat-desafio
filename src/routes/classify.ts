@@ -1,7 +1,12 @@
-import type { ClassificationRequest } from "@/lib/types";
-
 import { Hono } from "hono";
-import { classifyMessage, testGeminiConnection } from "@/services/gemini-service";
+import type {
+	APIClassificationRequest,
+	APIErrorResponse,
+} from "@/lib/types/api";
+import {
+	classifyMessage,
+	testGeminiConnection,
+} from "@/services/gemini-service";
 
 export const classifyRoute = new Hono();
 
@@ -11,12 +16,12 @@ export const classifyRoute = new Hono();
  */
 
 classifyRoute.get("/check", async (c) => {
-  const isConnected = await testGeminiConnection();
+	const isConnected = await testGeminiConnection();
 
-  return c.json({
-    status: isConnected ? "ok" : "error",
-    timestamp: new Date().toISOString(),
-  });
+	return c.json({
+		status: isConnected ? "ok" : "error",
+		timestamp: new Date().toISOString(),
+	});
 });
 
 /**
@@ -25,31 +30,31 @@ classifyRoute.get("/check", async (c) => {
  */
 
 classifyRoute.post("/", async (c) => {
-  try {
-    const { message } = await c.req.json<ClassificationRequest>();
+	try {
+		const { message } = await c.req.json<APIClassificationRequest>();
 
-    if (!message || message.trim() === "") {
-      return c.json(
-        {
-          error: "Erro de validação: mensagem vazia",
-          message: 'O campo "message" é obrigatório e não pode ser vazio.',
-        },
-        400
-      );
-    }
+		if (!message || message.trim() === "") {
+			return c.json(
+				{
+					error: "Erro de validação: mensagem vazia",
+					message: 'O campo "message" é obrigatório e não pode ser vazio.',
+				},
+				400,
+			);
+		}
 
-    const result = await classifyMessage(message);
+		const result = await classifyMessage(message);
 
-    return c.json(result);
-  } catch (error) {
-    console.log("Erro no endpoint /classify:", error);
+		return c.json(result);
+	} catch (error) {
+		console.log("Erro no endpoint /classify:", error);
 
-    return c.json(
-      {
-        error: "Internal Server Error",
-        message: "Erro ao classificar mensagem",
-      },
-      500
-    );
-  }
+		return c.json<APIErrorResponse>(
+			{
+				error: "Internal Server Error",
+				message: "Erro ao classificar mensagem",
+			},
+			500,
+		);
+	}
 });

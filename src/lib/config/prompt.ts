@@ -1,4 +1,4 @@
-import type { Message } from "@/lib/types";
+import type { Message } from "@/lib/types/generic";
 
 export const CLASSIFICATION_PROMPT = `Você é um assistente especializado em classificar mensagens de clientes de restaurantes.
 
@@ -68,9 +68,9 @@ Sua tarefa é analisar mensagens e classificá-las em UMA das seguintes categori
 `;
 
 export function createContextPrompt(messages: Message[]): string {
-  const conversationHistory = messages.join("\n");
+	const conversationHistory = messages.join("\n");
 
-  return `${CLASSIFICATION_PROMPT}
+	return `${CLASSIFICATION_PROMPT}
            
    **CONTEXTO DA CONVERSA:**
    ${conversationHistory}
