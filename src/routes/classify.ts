@@ -1,13 +1,7 @@
 import { Hono } from "hono";
-import type { APIErrorResponse } from "@/lib/types/api";
-import type { MessageContext } from "@/lib/types/generic";
+import type { APIClassifyRequest, APIErrorResponse } from "@/lib/types/api";
 import { parseApiError } from "@/lib/utils/parse-api-error";
 import { classifyMessage } from "@/services/classify-service";
-
-type ClassifyBody = {
-	message: string;
-	context?: MessageContext[];
-};
 
 const MAX_MESSAGE_LENGTH = 200;
 
@@ -20,7 +14,7 @@ export const classifyRoute = new Hono();
 
 classifyRoute.post("/", async (c) => {
 	try {
-		const body: ClassifyBody = await c.req.json();
+		const body: APIClassifyRequest = await c.req.json();
 
 		if (!body || typeof body !== "object") {
 			return c.json(

@@ -1,5 +1,5 @@
 import { CLASSIFICATION_PROMPT } from "@/lib/config/prompt";
-import type { APIClassificationResponse } from "@/lib/types/api";
+import type { APIClassifyResponse } from "@/lib/types/api";
 import { Categories, type MessageContext } from "@/lib/types/generic";
 
 function extractCleanJson(text: string): string {
@@ -38,9 +38,7 @@ export function generatePrompt(
   `;
 }
 
-export function parseGeminiResponse(
-	response: string,
-): APIClassificationResponse {
+export function parseGeminiResponse(response: string): APIClassifyResponse {
 	try {
 		const parsedResponse = JSON.parse(extractCleanJson(response));
 
