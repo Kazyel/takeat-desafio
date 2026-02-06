@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import type { APIErrorResponse } from "@/lib/types/api";
-import { calculateDetailedMetrics } from "@/services/validation-service";
+import type { MetricsResult } from "@/lib/types/metrics";
+import { parseApiError } from "@/lib/utils/parse-api-error";
+import { calculateDetailedMetrics } from "@/services/metrics-service";
 
 export const metricsRoute = new Hono();
 
@@ -13,9 +15,9 @@ metricsRoute.get("/", async (c) => {
 	try {
 		const metrics = await calculateDetailedMetrics();
 
-		return c.json(metrics);
+		return c.json<MetricsResult>(metrics);
 	} catch (error) {
-		console.log("Erro no endpoint /metrics:", error);
+		console.error("Erro no endpoint /metrics:", parseApiError(error));
 
 		return c.json<APIErrorResponse>(
 			{

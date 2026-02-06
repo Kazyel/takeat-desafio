@@ -12,6 +12,5 @@ export type ValidationResult = {
 export type ValidationResponse = {
 	total: number;
 	correct: number;
-	accuracy: number;
 	results: ValidationResult[];
 };

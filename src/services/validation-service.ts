@@ -1,12 +1,14 @@
+import { delay, logProgress } from "@/lib/helpers/validation-helpers";
 import { Categories, type Conversation } from "@/lib/types/generic";
-import type { MetricsResponse } from "@/lib/types/metrics";
 import type {
 	ValidationResponse,
 	ValidationResult,
 } from "@/lib/types/validation";
 import { loadConversations } from "@/lib/utils/load-conversations";
-import { calculateMetrics } from "@/lib/utils/metrics-calculator";
-import { classifyMessage } from "@/services/gemini-service";
+import { classifyMessage } from "@/services/classify-service";
+import { calculateMetrics } from "./metrics-service";
+
+const VALIDATION_DELAY_MS = 3000;
 
 export async function validateExample(
 	example: Conversation,
@@ -39,45 +41,37 @@ export async function validateExample(
 }
 
 export async function validateAllExamples(): Promise<ValidationResponse> {
-	const examples = await loadConversations();
-	const results: ValidationResult[] = [];
+	const allExamples = await loadConversations();
+	const validationResults: ValidationResult[] = [];
 
-	console.log(`🔍 Validando ${examples.length} exemplos...`);
+	console.log(`🔍 Validando ${allExamples.length} exemplos...`);
 
-	for (let i = 0; i < examples.length; i++) {
-		const example = examples[i];
-		console.log(`   Validando ${i + 1}/${examples.length}: ${example.id}...`);
+	for (let i = 0; i < allExamples.length; i++) {
+		const singleExample = allExamples[i];
 
-		const result = await validateExample(example);
-		results.push(result);
+		logProgress(i, allExamples.length, singleExample.id);
 
-		if (i < examples.length - 1) {
-			await new Promise((resolve) => setTimeout(resolve, 3000));
+		try {
+			const validatedResult = await validateExample(singleExample);
+			validationResults.push(validatedResult);
+		} catch (err) {
+			console.error(`Erro ao validar exemplo ${singleExample.id}:`, err);
+		}
+
+		if (i < allExamples.length - 1) {
+			delay(VALIDATION_DELAY_MS);
 		}
 	}
 
-	const metrics = calculateMetrics(results);
+	const calculatedMetrics = calculateMetrics(validationResults);
 
 	console.log(
-		`✅ Validação concluída: ${metrics.totalCorrect}/${examples.length} corretos (${metrics.accuracy}%)`,
+		`✅ Validação concluída: ${calculatedMetrics.totalCorrect}/${allExamples.length} corretos (${calculatedMetrics.accuracy}%)`,
 	);
 
 	return {
-		total: examples.length,
-		correct: metrics.totalCorrect,
-		accuracy: metrics.accuracy,
-		results,
-	};
-}
-
-export async function calculateDetailedMetrics(): Promise<MetricsResponse> {
-	const validation = await validateAllExamples();
-	const metrics = calculateMetrics(validation.results);
-
-	return {
-		accuracy: metrics.accuracy,
-		totalResults: validation.total,
-		totalCorrect: metrics.totalCorrect,
-		categoryMetrics: metrics.categoryMetrics,
+		total: allExamples.length,
+		correct: calculatedMetrics.totalCorrect,
+		results: validationResults,
 	};
 }

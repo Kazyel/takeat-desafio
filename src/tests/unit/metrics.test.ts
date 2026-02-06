@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { Categories } from "@/lib/types/generic";
 
 import type { ValidationResult } from "@/lib/types/validation";
-import { calculateMetrics } from "@/lib/utils/metrics-calculator";
+import { calculateMetrics } from "@/services/metrics-service";
 
 describe("Calcular métricas", () => {
 	it("Deve calcular acurácia de 100% quando todas as previsões estão corretas", () => {

@@ -5,10 +5,6 @@ export interface APIErrorResponse {
 	message: string;
 }
 
-export interface APIClassificationRequest {
-	message: string;
-}
-
 export interface APIClassificationResponse {
 	category: Categories;
 	confidence: number;

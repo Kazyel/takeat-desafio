@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
-
+import { getUniqueCategories } from "@/lib/helpers/metrics-helpers";
 import { Categories } from "@/lib/types/generic";
 import { loadConversations } from "@/lib/utils/load-conversations";
-import { getUniqueCategories } from "@/lib/utils/metrics-calculator";
 
 describe("Carregar exemplos de conversas", () => {
 	it("Deve carregar os exemplos do arquivo JSON corretamente", async () => {

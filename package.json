@@ -2,8 +2,9 @@
 	"name": "takeat-desafio",
 	"scripts": {
 		"dev": "bun run --hot src/index.ts",
-		"test:dev": "bun run vitest dev",
-		"test:integration": "bun run vitest tests/integration.test.ts",
+		"test:unit": "bun run vitest run src/tests/unit/",
+		"test:integration": "bun run vitest run src/tests/integration/",
+		"test:dev": "bun run vitest watch src/tests/unit",
 		"test": "bun run vitest run",
 		"lint": "bun run biome check --write"
 	},

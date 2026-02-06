@@ -6,11 +6,11 @@ export enum Categories {
 	Outros = "OUTROS",
 }
 
-export interface Conversation {
+export type Conversation = {
 	id: number;
 	message: string;
 	expected_category: Categories;
-}
+};
 
 export type Message = {
 	id: number;
