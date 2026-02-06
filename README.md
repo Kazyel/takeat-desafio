@@ -25,6 +25,8 @@ Este projeto é uma API REST que classifica automaticamente mensagens de cliente
 - 📦 Bun
 - 📝 TypeScript
 - 🚀 Hono
+- 🧾 Pino
+- 🔒 Zod
 - 🧪 Vitest
 - 🎨 Biome
 - 🔗 GitHub Actions

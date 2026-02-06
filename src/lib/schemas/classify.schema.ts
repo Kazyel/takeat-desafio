@@ -43,3 +43,7 @@ export type MessageWithContext = z.infer<typeof messageContextSchema>;
 export type Message = z.infer<typeof messageSchema>;
 export type APIClassifyRequest = z.infer<typeof classifyRequestSchema>;
 export type APIClassifyResponse = z.infer<typeof classifyResponseSchema>;
+
+export type ClassifyResult = z.infer<typeof classifyResponseSchema> & {
+	fromCache: boolean;
+};

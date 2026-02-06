@@ -5,7 +5,7 @@ import {
 	parseGeminiResponse,
 } from "@/lib/helpers/gemini-helpers";
 import type {
-	APIClassifyResponse,
+	ClassifyResult,
 	MessageWithContext,
 } from "@/lib/schemas/classify.schema";
 import { BasicCache } from "@/lib/utils/basic-cache";
@@ -23,7 +23,7 @@ export async function classifyMessage(
 	message: string,
 	context: MessageWithContext[] = [],
 	opts: ClassifyOptions = {},
-): Promise<APIClassifyResponse> {
+): Promise<ClassifyResult> {
 	const key = cache.generateKey(message);
 
 	if (cache.has(key)) {
@@ -42,7 +42,10 @@ export async function classifyMessage(
 			throw new Error("O valor do cache está nulo");
 		}
 
-		return cachedValue;
+		return {
+			...cachedValue,
+			fromCache: true,
+		};
 	}
 
 	try {
@@ -73,7 +76,10 @@ export async function classifyMessage(
 			cache.set(key, parsedResponse);
 		}
 
-		return parsedResponse;
+		return {
+			...parsedResponse,
+			fromCache: false,
+		};
 	} catch (error) {
 		logger.error({
 			event: "classify_failed",
