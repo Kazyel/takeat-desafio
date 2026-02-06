@@ -1,4 +1,14 @@
-import type { Message } from "@/lib/types/generic";
+/**
+ *  Esse é um prompt de exemplo para o modelo de classificação.
+ *
+ *  Você pode alterar o prompt para atender às suas necessidades.
+ *
+ *  O prompt foi criado com a seguinte mentalidade:
+ *    - O modelo sabe seu papel (classificar mensagens)
+ *    - O prompt é claro, conciso e direto, com vários exemplos para cada categoria
+ *    - Instruçöes simples de como deve ser o processo de classificação
+ *    - Instruções de como o modelo deve responder (JSON)
+ */
 
 export const CLASSIFICATION_PROMPT = `Você é um assistente especializado em classificar mensagens de clientes de restaurantes.
 
@@ -47,34 +57,21 @@ Sua tarefa é analisar mensagens e classificá-las em UMA das seguintes categori
 2. Identifique palavras-chave e o contexto
 3. Classifique na categoria MAIS APROPRIADA
 4. Se houver múltiplas intenções, escolha a PRINCIPAL
-5. Em caso de dúvida, use OUTROS
-6. Forneça um score de confiança de 0 a 1 (0.0 a 1.0)
-7. Explique brevemente o raciocínio
+5. Se houver reclamação e elogio na mesma mensagem, PRIORIZE RECLAMAÇÃO.
+6. Em caso de dúvida, use OUTROS
+7. Forneça um score de confiança de 0 a 1 (0.0 a 1.0)
+8. Explique brevemente o raciocínio
 
 **FORMATO DE RESPOSTA (JSON):**
 {
   "category": "CATEGORIA_AQUI",
   "confidence": 0.95,
+  "reasoning": "Explicação da classificação"
 }
 
 **IMPORTANTE:**
-- Responda APENAS com o JSON, sem texto adicional
-- RETORNE APENAS JSON VÁLIDO, SEM TEXTO EXTRA.
-- SEM VÍRGULAS FINAIS.
-- Use ASPAS DUPLAS em todas as chaves.
+- Responda APENAS com o JSON válido (aspas duplas, sem vírgulas finais).
 - Não inclua comentários.
 - Use exatamente os nomes das categorias acima
 - O confidence deve ser um número decimal entre 0 e 1
 `;
-
-export function createContextPrompt(messages: Message[]): string {
-	const conversationHistory = messages.join("\n");
-
-	return `${CLASSIFICATION_PROMPT}
-           
-   **CONTEXTO DA CONVERSA:**
-   ${conversationHistory}
- 
-   Classifique a ÚLTIMA mensagem do cliente considerando o contexto completo da conversa.
- `;
-}

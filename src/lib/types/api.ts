@@ -8,4 +8,5 @@ export interface APIErrorResponse {
 export interface APIClassificationResponse {
 	category: Categories;
 	confidence: number;
+	reasoning: string;
 }
