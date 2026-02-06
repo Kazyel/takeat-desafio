@@ -5,8 +5,14 @@ import {
 	getCategoryMetricsMap,
 	getUniqueCategories,
 } from "@/lib/helpers/metrics-helpers";
-import type { CategoryMetrics, MetricsResult } from "@/lib/types/metrics";
-import type { ValidationResult } from "@/lib/types/validation";
+
+import type {
+	CategoryMetrics,
+	MetricsResponse,
+} from "@/lib/schemas/metrics.schema";
+
+import type { ValidationResult } from "@/lib/schemas/validation.schema";
+
 import { validateAllExamples } from "@/services/validation-service";
 
 export function calculateCategoryMetrics(
@@ -39,29 +45,30 @@ export function calculateCategoryMetrics(
 	return categoryMetrics;
 }
 
-export function calculateMetrics(results: ValidationResult[]): MetricsResult {
-	const totalResults = results.length;
-	const totalCorrect = results.filter((result) => result.correct).length;
-	const accuracy = Math.round((totalCorrect / totalResults) * 100 * 100) / 100;
+export function calculateMetrics(results: ValidationResult[]): MetricsResponse {
+	const totalExamples = results.length;
+	const correctPredictions = results.filter((result) => result.correct).length;
+	const accuracy =
+		Math.round((correctPredictions / totalExamples) * 100 * 100) / 100;
 
 	const categoryMetrics = calculateCategoryMetrics(results);
 
 	return {
 		accuracy,
-		totalResults,
-		totalCorrect,
+		totalExamples,
+		correctPredictions,
 		categoryMetrics,
 	};
 }
 
-export async function calculateDetailedMetrics(): Promise<MetricsResult> {
+export async function calculateDetailedMetrics(): Promise<MetricsResponse> {
 	try {
 		const validation = await validateAllExamples();
 		const metrics = calculateMetrics(validation.results);
 
 		return {
-			totalResults: validation.total,
-			totalCorrect: metrics.totalCorrect,
+			totalExamples: validation.total,
+			correctPredictions: metrics.correctPredictions,
 			accuracy: metrics.accuracy,
 			categoryMetrics: metrics.categoryMetrics,
 		};
@@ -69,8 +76,8 @@ export async function calculateDetailedMetrics(): Promise<MetricsResult> {
 		console.error("Erro ao calcular métricas detalhadas:", error);
 		return {
 			accuracy: 0,
-			totalResults: 0,
-			totalCorrect: 0,
+			totalExamples: 0,
+			correctPredictions: 0,
 			categoryMetrics: [],
 		};
 	}

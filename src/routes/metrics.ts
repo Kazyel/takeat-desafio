@@ -1,27 +1,34 @@
 import { Hono } from "hono";
-import type { APIErrorResponse } from "@/lib/types/api";
-import type { MetricsResult } from "@/lib/types/metrics";
+import { metricsResponseSchema } from "@/lib/schemas/metrics.schema";
 import { parseApiError } from "@/lib/utils/parse-api-error";
 import { calculateDetailedMetrics } from "@/services/metrics-service";
 
 export const metricsRoute = new Hono();
 
-/**
- * GET /metrics
- * Calcular métricas de classificação
- */
-
 metricsRoute.get("/", async (c) => {
 	try {
-		const metrics = await calculateDetailedMetrics();
+		const calculatedMetrics = await calculateDetailedMetrics();
+		const parsedMetrics = metricsResponseSchema.safeParse(calculatedMetrics);
 
-		return c.json<MetricsResult>(metrics);
+		if (!parsedMetrics.success) {
+			console.error("Métricas inválidas geradas:", parsedMetrics.error);
+
+			return c.json(
+				{
+					error: "INVALID_METRICS",
+					message: "Falha interna ao gerar métricas válidas",
+				},
+				500,
+			);
+		}
+
+		return c.json(parsedMetrics.data);
 	} catch (error) {
 		console.error("Erro no endpoint /metrics:", parseApiError(error));
 
-		return c.json<APIErrorResponse>(
+		return c.json(
 			{
-				error: "Internal Server Error",
+				error: "INTERNAL_SERVER_ERROR",
 				message: "Erro ao calcular métricas",
 			},
 			500,

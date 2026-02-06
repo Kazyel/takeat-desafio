@@ -1,6 +1,6 @@
-import { Categories } from "@/lib/types/generic";
-import type { MetricsMap } from "@/lib/types/metrics";
-import type { ValidationResult } from "@/lib/types/validation";
+import type { MetricsMap } from "@/lib/schemas/metrics.schema";
+import type { ValidationResult } from "@/lib/schemas/validation.schema";
+import { Categories } from "@/lib/types";
 
 export const getUniqueCategories = () => {
 	return [

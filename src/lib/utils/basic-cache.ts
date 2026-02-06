@@ -1,4 +1,4 @@
-import type { APIClassifyResponse } from "@/lib/types/api";
+import type { APIClassifyResponse } from "@/lib/schemas/classify.schema";
 
 export class BasicCache {
 	private cache: Map<string, APIClassifyResponse>;

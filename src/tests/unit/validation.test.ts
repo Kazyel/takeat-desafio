@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getUniqueCategories } from "@/lib/helpers/metrics-helpers";
-import { Categories } from "@/lib/types/generic";
+import { Categories } from "@/lib/types";
 import { loadConversations } from "@/lib/utils/load-conversations";
 
 describe("Carregar exemplos de conversas", () => {
