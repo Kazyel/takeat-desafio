@@ -1,0 +1,89 @@
+import { Categories } from "@/lib/types/generic";
+import type { MetricsMap } from "@/lib/types/metrics";
+import type { ValidationResult } from "@/lib/types/validation";
+
+export const getUniqueCategories = () => {
+	return [
+		Categories.PedidoCardapio,
+		Categories.StatusEntrega,
+		Categories.Reclamacao,
+		Categories.Elogio,
+		Categories.Outros,
+	];
+};
+
+export const getCategoryMetricsMap = (
+	results: ValidationResult[],
+): MetricsMap => {
+	const categories = getUniqueCategories();
+
+	const metricsMap: MetricsMap = new Map(
+		categories.map((category) => [
+			category,
+			{ truePositives: 0, falsePositives: 0, falseNegatives: 0, samples: 0 },
+		]),
+	);
+
+	for (const result of results) {
+		const { expected, predicted } = result;
+
+		const expectedMetrics = metricsMap.get(expected);
+		if (!expectedMetrics) {
+			metricsMap.set(expected, {
+				truePositives: 0,
+				falsePositives: 0,
+				falseNegatives: 0,
+				samples: 0,
+			});
+			continue;
+		}
+
+		expectedMetrics.samples++;
+
+		if (predicted === expected) {
+			expectedMetrics.truePositives++;
+			continue;
+		}
+
+		expectedMetrics.falseNegatives++;
+
+		const predictedMetrics = metricsMap.get(predicted);
+		if (!predictedMetrics) {
+			metricsMap.set(predicted, {
+				truePositives: 0,
+				falsePositives: 0,
+				falseNegatives: 0,
+				samples: 0,
+			});
+			continue;
+		}
+
+		predictedMetrics.falsePositives++;
+	}
+
+	return metricsMap;
+};
+
+export function calculatePrecision(tp: number, fp: number): number {
+	if (tp + fp === 0) {
+		return 0;
+	}
+
+	return Number(((tp / (tp + fp)) * 100).toFixed(2));
+}
+
+export function calculateRecall(tp: number, fn: number): number {
+	if (tp + fn === 0) {
+		return 0;
+	}
+
+	return Number(((tp / (tp + fn)) * 100).toFixed(2));
+}
+
+export function calculateF1Score(tp: number, fp: number, fn: number): number {
+	if (tp + 0.5 * (fp + fn) === 0) {
+		return 0;
+	}
+
+	return Number(((tp / (tp + 0.5 * (fp + fn))) * 100).toFixed(2));
+}

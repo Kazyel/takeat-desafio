@@ -8,7 +8,7 @@ export type CategoryMetrics = {
 	samples: number;
 };
 
-export type MetricsResponse = {
+export type MetricsResult = {
 	accuracy: number;
 	totalResults: number;
 	totalCorrect: number;

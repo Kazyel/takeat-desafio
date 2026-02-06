@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
-
+import { getUniqueCategories } from "@/lib/helpers/metrics-helpers";
 import { loadConversations } from "@/lib/utils/load-conversations";
-import { getUniqueCategories } from "@/lib/utils/metrics-calculator";
 import { validateExample } from "@/services/validation-service";
 
 /**
@@ -12,7 +11,7 @@ import { validateExample } from "@/services/validation-service";
  *
  *  São demorados, já que estou usando um modelo de conversa que demora.
  *
- *  Os testes são ignorados por padrão, para não gastar os tokens do Gemini.
+ *  Para rodar esse teste, rode o comando `bun run test:integration`
  */
 
 describe("Testes de integração - GEMINI API", () => {
