@@ -47,7 +47,7 @@ O servidor estará rodando em: http://localhost:8080/api/v1
 
 ## 📚 Documentação da API
 
-Para acessar a documentação da API completa, acesse [aqui](https://kazyel.github.io/takeat-desafio/docs/API.md).
+Para acessar a documentação da API completa, acesse [aqui](docs/API.md).
 
 ### Endpoint Base
 
@@ -92,7 +92,7 @@ curl -X POST http://localhost:3000/classify \
 ```json
 {
   "category": "PEDIDO_CARDAPIO",
-  "confidence": 0.95,
+  "confidence": 0.95
 }
 ```
 
@@ -117,7 +117,7 @@ curl -X POST http://localhost:8080/api/v1/classify/context \
 ```json
 {
   "category": "STATUS_ENTREGA",
-  "confidence": 0.98,
+  "confidence": 0.98
 }
 ```
 
@@ -167,6 +167,7 @@ curl http://localhost:8080/api/v1/metrics
   ]
 }
 ```
+
 ---
 
 #### 8️⃣ **GET /health** - Health check
@@ -189,4 +190,3 @@ bun run lint
 ### EditorConfig
 
 O projeto utiliza o [EditorConfig](https://editorconfig.org/) para definir padrões de formatação de código.
-
