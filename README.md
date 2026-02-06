@@ -82,7 +82,7 @@ curl http://localhost:8080/api/v1
 #### 2️⃣ **POST /classify** - Classificar mensagem simples
 
 ```bash
-curl -X POST http://localhost:3000/classify \
+curl -X POST http://localhost:8080/api/v1/classify \
   -H "Content-Type: application/json" \
   -d '{
     "message": "Oi, queria saber se vocês têm pizza de calabresa"
@@ -104,7 +104,7 @@ curl -X POST http://localhost:3000/classify \
 #### 2️⃣ **POST /classify** - Classificar mensagem com contexto
 
 ```bash
-curl -X POST http://localhost:3000/classify \
+curl -X POST http://localhost:8080/api/v1/classify \
   -H "Content-Type: application/json" \
   -d '{
     "message": "Queria saber se vocês têm pizza de calabresa",
