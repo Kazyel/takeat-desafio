@@ -5,11 +5,7 @@
 - [Visão Geral](#visão-geral)
 - [Autenticação](#autenticação)
 - [Endpoints](#endpoints)
-- [Modelos de Dados](#modelos-de-dados)
-- [Códigos de Status](#códigos-de-status)
-- [Exemplos de Uso](#exemplos-de-uso)
 - [Rate Limiting](#rate-limiting)
-- [Tratamento de Erros](#tratamento-de-erros)
 
 ---
 
@@ -21,7 +17,7 @@
 
 **Headers obrigatórios:**
 
-```
+```bash
 Content-Type: application/json
 ```
 
