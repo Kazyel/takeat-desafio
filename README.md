@@ -1,5 +1,7 @@
 # Classificador de Intenções - Desafio Takeat
 
+![workflow](https://github.com/kazyel/takeat-desafio/actions/workflows/actions.yml/badge.svg)
+
 > Sistema inteligente de classificação automática de mensagens de clientes de restaurantes usando IA (Google Gemini).
 
 ## 📋 Sobre o Projeto
