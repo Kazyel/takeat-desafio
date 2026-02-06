@@ -99,6 +99,31 @@ curl -X POST http://localhost:3000/classify \
 
 ---
 
+#### 2️⃣ **POST /classify** - Classificar mensagem com contexto
+
+```bash
+curl -X POST http://localhost:3000/classify \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Queria saber se vocês têm pizza de calabresa",
+    "context": [
+      { "role": "user", "content": "Oi, boa noite" },
+      { "role": "assistant", "content": "Olá!
+  }'
+```
+
+**Resposta:**
+
+```json
+{
+  "category": "PEDIDO_CARDAPIO",
+  "confidence": 0.95,
+  "reasoning": "Mensagem pergunta sobre item do cardápio"
+}
+```
+
+---
+
 #### 4️⃣ **POST /validate** - Validar modelo contra exemplos
 
 ```bash
