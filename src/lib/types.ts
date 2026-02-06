@@ -11,13 +11,3 @@ export type Conversation = {
 	message: string;
 	expected_category: Categories;
 };
-
-export type Message = {
-	id: number;
-	message: string;
-};
-
-export type MessageContext = {
-	role?: string;
-	content: string;
-};

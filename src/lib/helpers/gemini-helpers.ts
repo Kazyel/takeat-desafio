@@ -1,6 +1,9 @@
 import { CLASSIFICATION_PROMPT } from "@/lib/config/prompt";
-import type { APIClassifyResponse } from "@/lib/types/api";
-import { Categories, type MessageContext } from "@/lib/types/generic";
+import type {
+	APIClassifyResponse,
+	MessageWithContext,
+} from "@/lib/schemas/classify.schema";
+import { Categories } from "@/lib/types";
 
 function extractCleanJson(text: string): string {
 	const match = text.match(/\{[\s\S]*\}/);
@@ -11,7 +14,7 @@ function extractCleanJson(text: string): string {
 
 export function generatePrompt(
 	message: string,
-	context: MessageContext[] = [],
+	context: MessageWithContext[] = [],
 ): string {
 	const formattedContext = context
 		.map(

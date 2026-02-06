@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { Categories, type Conversation } from "@/lib/types/generic";
+import { Categories, type Conversation } from "@/lib/types";
 
 const EXAMPLES_PATH = join(
 	process.cwd(),

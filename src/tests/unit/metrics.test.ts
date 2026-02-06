@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { Categories } from "@/lib/types/generic";
-
-import type { ValidationResult } from "@/lib/types/validation";
+import type { ValidationResult } from "@/lib/schemas/validation.schema";
+import { Categories } from "@/lib/types";
 import { calculateMetrics } from "@/services/metrics-service";
 
 describe("Calcular métricas", () => {
@@ -28,8 +27,8 @@ describe("Calcular métricas", () => {
 		const metrics = calculateMetrics(results);
 
 		expect(metrics.accuracy).toBe(100);
-		expect(metrics.totalCorrect).toBe(2);
-		expect(metrics.totalResults).toBe(2);
+		expect(metrics.correctPredictions).toBe(2);
+		expect(metrics.totalExamples).toBe(2);
 	});
 
 	it("Deve calcular acurácia de 50% quando metade está errada", () => {
@@ -55,8 +54,8 @@ describe("Calcular métricas", () => {
 		const metrics = calculateMetrics(results);
 
 		expect(metrics.accuracy).toBe(50);
-		expect(metrics.totalCorrect).toBe(1);
-		expect(metrics.totalResults).toBe(2);
+		expect(metrics.correctPredictions).toBe(1);
+		expect(metrics.totalExamples).toBe(2);
 	});
 
 	it("Deve calcular precisão, recall e f1-score corretamente", () => {

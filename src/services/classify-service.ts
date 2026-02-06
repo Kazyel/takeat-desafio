@@ -4,8 +4,10 @@ import {
 	generatePrompt,
 	parseGeminiResponse,
 } from "@/lib/helpers/gemini-helpers";
-import type { APIClassifyResponse } from "@/lib/types/api";
-import type { MessageContext } from "@/lib/types/generic";
+import type {
+	APIClassifyResponse,
+	MessageWithContext,
+} from "@/lib/schemas/classify.schema";
 import { BasicCache } from "@/lib/utils/basic-cache";
 
 type ClassifyOptions = {
@@ -18,13 +20,9 @@ const cache = new BasicCache();
 
 export async function classifyMessage(
 	message: string,
-	context: MessageContext[] = [],
+	context: MessageWithContext[] = [],
 	opts: ClassifyOptions = {},
 ): Promise<APIClassifyResponse> {
-	if (typeof message !== "string" || message.trim().length === 0) {
-		throw new Error("Input inválido: mensagem deve ser uma string não vazia");
-	}
-
 	const key = cache.generateKey(message);
 
 	if (cache.has(key)) {

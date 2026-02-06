@@ -1,6 +1,5 @@
 import { Hono } from "hono";
-import type { APIErrorResponse } from "@/lib/types/api";
-import type { ValidationResponse } from "@/lib/types/validation";
+import type { ValidationResponse } from "@/lib/schemas/validation.schema";
 import { parseApiError } from "@/lib/utils/parse-api-error";
 import { validateAllExamples } from "@/services/validation-service";
 
@@ -19,7 +18,7 @@ validateRoute.get("/", async (c) => {
 	} catch (error) {
 		console.error("Erro no endpoint /validate:", parseApiError(error));
 
-		return c.json<APIErrorResponse>(
+		return c.json(
 			{
 				error: "Internal Server Error",
 				message: "Erro ao validar exemplos",

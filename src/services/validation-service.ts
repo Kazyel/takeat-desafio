@@ -1,14 +1,15 @@
 import { delay, logProgress } from "@/lib/helpers/validation-helpers";
-import { Categories, type Conversation } from "@/lib/types/generic";
 import type {
 	ValidationResponse,
 	ValidationResult,
-} from "@/lib/types/validation";
+} from "@/lib/schemas/validation.schema";
+import { Categories, type Conversation } from "@/lib/types";
+
 import { loadConversations } from "@/lib/utils/load-conversations";
 import { classifyMessage } from "@/services/classify-service";
-import { calculateMetrics } from "./metrics-service";
+import { calculateMetrics } from "@/services/metrics-service";
 
-const VALIDATION_DELAY_MS = 3000;
+const VALIDATION_DELAY_MS = 5000;
 
 export async function validateExample(
 	example: Conversation,
@@ -66,12 +67,12 @@ export async function validateAllExamples(): Promise<ValidationResponse> {
 	const calculatedMetrics = calculateMetrics(validationResults);
 
 	console.log(
-		`✅ Validação concluída: ${calculatedMetrics.totalCorrect}/${allExamples.length} corretos (${calculatedMetrics.accuracy}%)`,
+		`✅ Validação concluída: ${calculatedMetrics.correctPredictions}/${allExamples.length} corretos (${calculatedMetrics.accuracy}%)`,
 	);
 
 	return {
 		total: allExamples.length,
-		correct: calculatedMetrics.totalCorrect,
+		correct: calculatedMetrics.correctPredictions,
 		results: validationResults,
 	};
 }
