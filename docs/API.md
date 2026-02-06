@@ -240,6 +240,10 @@ Esta API não requer autenticação atualmente. A chave do Gemini é configurada
 }
 ```
 
+Para entender melhor como as métricas são calculadas, visite o site do [Google Developers Machine Learning](https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall?hl=pt-br).
+
+---
+
 ## Rate Limiting
 
 Atualmente não há limite de taxa implementado na API. No entanto, esteja ciente de que:
