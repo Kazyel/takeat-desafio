@@ -1,22 +1,192 @@
-# Desafio Takeat
+# Classificador de Intenções - Desafio Takeat
 
-O desafio consiste em criar um sistema de classificação de mensagens de clientes de restaurantes. O sistema deverá ler exemplos de conversas de clientes e classificar as mensagens como se fosse um assistente especializado em classificar mensagens de clientes de restaurantes.
+> Sistema inteligente de classificação automática de mensagens de clientes de restaurantes usando IA (Google Gemini).
 
-## Tecnologias Utilizadas
+## 📋 Sobre o Projeto
 
-- Node.js
-- TypeScript
-- Bun
-- Vitest
-- Hono
-- Gemini
-- GitHub Actions
-- Biome
+Este projeto é uma API REST que classifica automaticamente mensagens de clientes de restaurantes em 5 categorias diferentes, utilizando o modelo Google Gemini para análise de linguagem natural.
 
-## Como Executar o Projeto
+## ✨ Funcionalidades
 
-1. Clone o repositório: `git clone https://github.com/kazyel/takeat-desafio.git`
-2. Entre na pasta do projeto: `cd takeat-desafio`
-3. Instale as dependências: `bun install`
-4. Inicie o servidor de desenvolvimento: `bun run dev`
-5. O endpoint de entrada é: `http://localhost:8080/api/v1`
+- ✅ Classificação simples de mensagens individuais
+- ✅ Classificação com contexto (histórico de conversa)
+- ✅ Validação automática contra exemplos conhecidos
+- ✅ Métricas detalhadas (acurácia, precisão, recall, F1-score)
+- ✅ Score de confiança para cada classificação
+- ✅ API RESTful completa e documentada
+- ✅ Testes automatizados com Vitest
+- ✅ CI/CD com GitHub Actions
+
+## 🚀 Como Utilizar
+
+### Pré-requisitos
+
+- Node.js 18.x ou superior
+- Bun (ou npm/yarn)
+- Chave da API do Google Gemini ([obter aqui](https://aistudio.google.com/app/api-keys))
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/kazyel/takeat-desafio.git
+
+# 2. Entre na pasta do projeto
+cd takeat-desafio
+
+# 3. Instale as dependências
+bun install
+
+# 4. Configure as variáveis de ambiente
+cp .env.example .env
+# Edite o arquivo .env e adicione sua GEMINI_API_KEY
+
+# 5. Execute o servidor
+bun run dev
+```
+
+O servidor estará rodando em: http://localhost:8080/api/v1
+
+## 📚 Documentação da API
+
+Para acessar a documentação da API completa, acesse [aqui](https://kazyel.github.io/takeat-desafio/docs/API.md).
+
+### Endpoint Base
+
+```bash
+http://localhost:8080/api/v1
+```
+
+### 🔍 Endpoints Disponíveis
+
+#### 1️⃣ **GET /** - Informações da API
+
+```bash
+curl http://localhost:8080/api/v1
+```
+
+**Resposta:**
+
+```json
+{
+  "name": "Classificador de Intenções - API",
+  "version": "1.0.0",
+  "description": "API REST para classificação automática de mensagens",
+  "endpoints": { ... },
+  "categories": ["PEDIDO_CARDAPIO", "STATUS_ENTREGA", ...]
+}
+```
+
+---
+
+#### 2️⃣ **POST /classify** - Classificar mensagem simples
+
+```bash
+curl -X POST http://localhost:3000/classify \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Oi, queria saber se vocês têm pizza de calabresa"
+  }'
+```
+
+**Resposta:**
+
+```json
+{
+  "category": "PEDIDO_CARDAPIO",
+  "confidence": 0.95,
+}
+```
+
+---
+
+#### 3️⃣ **POST /classify/context** - Classificar com contexto
+
+```bash
+curl -X POST http://localhost:8080/api/v1/classify/context \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      { "role": "user", "content": "Oi, boa noite" },
+      { "role": "assistant", "content": "Olá! Como posso ajudar?" },
+      { "role": "user", "content": "Já saiu pra entrega?" }
+    ]
+  }'
+```
+
+**Resposta:**
+
+```json
+{
+  "category": "STATUS_ENTREGA",
+  "confidence": 0.98,
+}
+```
+
+---
+
+#### 4️⃣ **POST /validate** - Validar modelo contra exemplos
+
+```bash
+curl -X POST http://localhost:8080/api/v1/validate
+```
+
+**Resposta:**
+
+```json
+{
+  "total": 25,
+  "correct": 25,
+  "accuracy": 100,
+  "results": [ ... ],
+}
+```
+
+---
+
+#### 5️⃣ **GET /metrics** - Métricas detalhadas
+
+```bash
+curl http://localhost:8080/api/v1/metrics
+```
+
+**Resposta:**
+
+```json
+{
+  "accuracy": 100,
+  "totalExamples": 25,
+  "correctPredictions": 25,
+  "categoryMetrics": [
+    {
+      "category": "PEDIDO_CARDAPIO",
+      "precision": 100,
+      "recall": 100,
+      "f1Score": 100,
+      "samples": 5
+    },
+    ...
+  ]
+}
+```
+---
+
+#### 8️⃣ **GET /health** - Health check
+
+```bash
+curl http://localhost:8080/api/v1/health
+```
+
+## 🎨 Qualidade de Código
+
+### Linting (Biome)
+
+Por padrao, o projeto utiliza o linter [Biome](https://biomejs.dev/) para verificar o código.
+
+```bash
+# Verificar código
+bun run lint
+```
+
+### EditorConfig
+
+O projeto utiliza o [EditorConfig](https://editorconfig.org/) para definir padrões de formatação de código.
+
