@@ -19,6 +19,17 @@ Este projeto é uma API REST que classifica automaticamente mensagens de cliente
 - ✅ Testes automatizados com Vitest
 - ✅ CI/CD com GitHub Actions
 
+## 🧩 Tecnologias Utilizadas
+
+- 🔧 Node.js
+- 📦 Bun
+- 📝 TypeScript
+- 🚀 Hono
+- 🧪 Vitest
+- 🎨 Biome
+- 🔗 GitHub Actions
+- 📊 Google Gemini
+
 ## 🚀 Como Utilizar
 
 ### Pré-requisitos
@@ -183,7 +194,7 @@ curl http://localhost:8080/api/v1/health
 
 ### Linting (Biome)
 
-Por padrao, o projeto utiliza o linter [Biome](https://biomejs.dev/) para verificar o código.
+Por padrão, o projeto utiliza o linter [Biome](https://biomejs.dev/) para verificar o código.
 
 ```bash
 # Verificar código

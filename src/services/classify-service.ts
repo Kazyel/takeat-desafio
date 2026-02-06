@@ -4,7 +4,7 @@ import {
 	generatePrompt,
 	parseGeminiResponse,
 } from "@/lib/helpers/gemini-helpers";
-import type { APIClassificationResponse } from "@/lib/types/api";
+import type { APIClassifyResponse } from "@/lib/types/api";
 import type { MessageContext } from "@/lib/types/generic";
 
 type ClassifyOptions = {
@@ -16,7 +16,7 @@ export async function classifyMessage(
 	message: string,
 	context: MessageContext[] = [],
 	opts: ClassifyOptions = {},
-): Promise<APIClassificationResponse> {
+): Promise<APIClassifyResponse> {
 	if (typeof message !== "string" || message.trim().length === 0) {
 		throw new Error("Input inválido: mensagem deve ser uma string não vazia");
 	}
