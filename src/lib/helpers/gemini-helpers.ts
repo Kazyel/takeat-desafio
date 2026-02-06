@@ -4,6 +4,8 @@ import type {
 	MessageWithContext,
 } from "@/lib/schemas/classify.schema";
 import { Categories } from "@/lib/types";
+import { logger } from "@/middlewares/logger";
+import { parseApiError } from "../utils/parse-api-error";
 
 function extractCleanJson(text: string): string {
 	const match = text.match(/\{[\s\S]*\}/);
@@ -61,8 +63,11 @@ export function parseGeminiResponse(response: string): APIClassifyResponse {
 			reasoning: parsedResponse.reasoning,
 		};
 	} catch (error) {
-		console.error("Erro ao parsear resposta do Gemini:", error);
-		console.error("Resposta original:", response);
+		logger.error({
+			event: "gemini_parse_failed",
+			error: parseApiError(error),
+			originalMessage: response,
+		});
 
 		return {
 			category: Categories.Outros,

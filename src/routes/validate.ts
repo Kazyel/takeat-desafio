@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { validationResponseSchema } from "@/lib/schemas/validation.schema";
 import { parseApiError } from "@/lib/utils/parse-api-error";
+import { logger } from "@/middlewares/logger";
 import { validateAllExamples } from "@/services/validation-service";
 
 export const validateRoute = new Hono();
@@ -16,10 +17,10 @@ validateRoute.get("/", async (c) => {
 		const parsedValidation = validationResponseSchema.safeParse(validation);
 
 		if (!parsedValidation.success) {
-			console.error(
-				"Erro ao validar estrutura da resposta:",
-				parsedValidation.error,
-			);
+			logger.error({
+				event: "validation_invalid",
+				error: parsedValidation.error,
+			});
 
 			return c.json(
 				{
@@ -32,7 +33,10 @@ validateRoute.get("/", async (c) => {
 
 		return c.json(parsedValidation.data);
 	} catch (error) {
-		console.error("Erro no endpoint /validate:", parseApiError(error));
+		logger.error({
+			event: "validation_failed",
+			error: parseApiError(error),
+		});
 
 		return c.json(
 			{

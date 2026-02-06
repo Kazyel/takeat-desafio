@@ -3,7 +3,7 @@ import {
 	classifyRequestSchema,
 	classifyResponseSchema,
 } from "@/lib/schemas/classify.schema";
-
+import { logger } from "@/middlewares/logger";
 import { classifyMessage } from "@/services/classify-service";
 
 export const classifyRoute = new Hono();
@@ -18,8 +18,7 @@ classifyRoute.post("/", async (c) => {
 
 	try {
 		body = await c.req.json();
-	} catch (error) {
-		console.error("Erro ao parsear JSON:", error);
+	} catch {
 		return c.json(
 			{
 				error: "INVALID_JSON",
@@ -32,7 +31,6 @@ classifyRoute.post("/", async (c) => {
 	const parsedBody = classifyRequestSchema.safeParse(body);
 
 	if (!parsedBody.success) {
-		console.error("Erro ao parsear requisição:", parsedBody.error);
 		return c.json(
 			{
 				error: "INVALID_REQUEST",
@@ -47,16 +45,18 @@ classifyRoute.post("/", async (c) => {
 	const parsedGeminiResult = classifyResponseSchema.safeParse(geminiResult);
 
 	if (!parsedGeminiResult.success) {
-		console.error(
-			"Erro ao parsear resposta do Gemini:",
-			parsedGeminiResult.error,
-		);
+		logger.error({
+			event: "gemini_parse_failed",
+			error: parsedGeminiResult.error,
+			originalMessage: geminiResult,
+		});
+
 		return c.json(
 			{
 				error: "INVALID_GEMINI_RESPONSE",
 				message: parsedGeminiResult.error.issues,
 			},
-			400,
+			500,
 		);
 	}
 
