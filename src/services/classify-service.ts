@@ -5,6 +5,7 @@ import {
 	parseGeminiResponse,
 } from "@/lib/helpers/gemini-helpers";
 import type { APIClassificationResponse } from "@/lib/types/api";
+import type { MessageContext } from "@/lib/types/generic";
 
 type ClassifyOptions = {
 	gemini?: GoogleGenAI;
@@ -13,6 +14,7 @@ type ClassifyOptions = {
 
 export async function classifyMessage(
 	message: string,
+	context: MessageContext[] = [],
 	opts: ClassifyOptions = {},
 ): Promise<APIClassificationResponse> {
 	if (typeof message !== "string" || message.trim().length === 0) {
@@ -29,7 +31,7 @@ export async function classifyMessage(
 				maxOutputTokens: configs.maxOutputTokens,
 				temperature: configs.temperature,
 			},
-			contents: generatePrompt(message),
+			contents: generatePrompt(message, context),
 		});
 
 		if (!result || !result.text) {

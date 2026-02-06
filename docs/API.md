@@ -112,7 +112,8 @@ Esta API não requer autenticação atualmente. A chave do Gemini é configurada
 ```json
 {
   "category": "PEDIDO_CARDAPIO",
-  "confidence": 0.95
+  "confidence": 0.95,
+  "reasoning": "Mensagem pergunta sobre item do cardápio"
 }
 ```
 
@@ -125,7 +126,7 @@ Esta API não requer autenticação atualmente. A chave do Gemini é configurada
 
 ### 4. Classificar com Contexto
 
-**Endpoint:** `POST /classify/context`
+**Endpoint:** `POST /classify`
 
 **Descrição:** Classifica uma mensagem considerando o histórico da conversa.
 
@@ -133,7 +134,8 @@ Esta API não requer autenticação atualmente. A chave do Gemini é configurada
 
 ```json
 {
-  "messages": [
+  "message": "Oi, boa noite",
+  "context": [
     {
       "role": "user | assistant",
       "content": "string"
@@ -146,10 +148,10 @@ Esta API não requer autenticação atualmente. A chave do Gemini é configurada
 
 ```json
 {
-  "messages": [
+  "message": "Meu pedido já saiu?",
+  "context": [
     { "role": "user", "content": "Oi, boa noite" },
-    { "role": "assistant", "content": "Olá! Como posso ajudar?" },
-    { "role": "user", "content": "Meu pedido já saiu?" }
+    { "role": "assistant", "content": "Olá! Como posso ajudar?" }
   ]
 }
 ```
@@ -159,7 +161,8 @@ Esta API não requer autenticação atualmente. A chave do Gemini é configurada
 ```json
 {
   "category": "STATUS_ENTREGA",
-  "confidence": 0.98
+  "confidence": 0.98,
+  "reasoning": "Contexto indica pergunta sobre status do pedido"
 }
 ```
 
@@ -194,6 +197,7 @@ Esta API não requer autenticação atualmente. A chave do Gemini é configurada
       "expected": "PEDIDO_CARDAPIO",
       "predicted": "PEDIDO_CARDAPIO",
       "confidence": 0.95,
+      "reasoning": "Mensagem pergunta sobre item do cardápio",
       "correct": true,
     },
     ...

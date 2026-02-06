@@ -16,3 +16,8 @@ export type Message = {
 	id: number;
 	message: string;
 };
+
+export type MessageContext = {
+	role?: string;
+	content: string;
+};

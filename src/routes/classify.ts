@@ -1,13 +1,15 @@
 import { Hono } from "hono";
 import type { APIErrorResponse } from "@/lib/types/api";
+import type { MessageContext } from "@/lib/types/generic";
 import { parseApiError } from "@/lib/utils/parse-api-error";
 import { classifyMessage } from "@/services/classify-service";
 
 type ClassifyBody = {
 	message: string;
+	context?: MessageContext[];
 };
 
-const MAX_MESSAGE_LENGTH = 500;
+const MAX_MESSAGE_LENGTH = 200;
 
 export const classifyRoute = new Hono();
 
@@ -30,7 +32,7 @@ classifyRoute.post("/", async (c) => {
 			);
 		}
 
-		const { message } = body;
+		const { message, context } = body;
 
 		if (!message || message.trim() === "") {
 			return c.json(
@@ -52,7 +54,27 @@ classifyRoute.post("/", async (c) => {
 			);
 		}
 
-		const result = await classifyMessage(message);
+		if (context && !Array.isArray(context)) {
+			return c.json(
+				{
+					error: "Payload inválido",
+					message: "O campo 'context' deve ser um array",
+				},
+				400,
+			);
+		}
+
+		if (context && context.length > 10) {
+			return c.json(
+				{
+					error: "Payload muito grande",
+					message: "O campo 'context' não pode ter mais de 5 mensagens",
+				},
+				400,
+			);
+		}
+
+		const result = await classifyMessage(message, context);
 
 		return c.json(result);
 	} catch (error) {

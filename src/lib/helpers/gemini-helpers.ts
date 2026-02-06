@@ -1,6 +1,6 @@
 import { CLASSIFICATION_PROMPT } from "@/lib/config/prompt";
 import type { APIClassificationResponse } from "@/lib/types/api";
-import { Categories } from "@/lib/types/generic";
+import { Categories, type MessageContext } from "@/lib/types/generic";
 
 function extractCleanJson(text: string): string {
 	const match = text.match(/\{[\s\S]*\}/);
@@ -9,13 +9,33 @@ function extractCleanJson(text: string): string {
 	return match[0].replace(/,(\s*})/g, "$1");
 }
 
-export function generatePrompt(message: string): string {
+export function generatePrompt(
+	message: string,
+	context: MessageContext[] = [],
+): string {
+	const formattedContext = context
+		.map(
+			(msg, i) =>
+				`${i + 1}) ${msg.role === "user" ? "Cliente" : "Atendente"}: ${
+					msg.content
+				}`,
+		)
+		.join("\n");
+
 	return `${CLASSIFICATION_PROMPT}
 
-      **MENSAGEM DO CLIENTE:**
-      "${message}"
+      ${
+				context.length > 0
+					? `**HISTÓRICO DA CONVERSA:**\n${formattedContext}\n`
+					: ""
+			}
 
-      Classifique esta mensagem.`;
+      **NOVA MENSAGEM DO CLIENTE:**
+        "${message}"
+
+      Se houver HISTÓRICO DA CONVERSA, use-o para entender a intenção da ÚLTIMA mensagem do cliente.
+      A classificação deve SEMPRE se referir à ÚLTIMA mensagem.
+  `;
 }
 
 export function parseGeminiResponse(
@@ -25,7 +45,7 @@ export function parseGeminiResponse(
 		const parsedResponse = JSON.parse(extractCleanJson(response));
 
 		if (!Object.values(Categories).includes(parsedResponse.category)) {
-			throw new Error(`Categoria inválida: ${parsedResponse.category}`);
+			throw new Error(`Categoria inválida: $parsedResponse.category`);
 		}
 
 		let confidence = parseFloat(parsedResponse.confidence);
@@ -37,6 +57,7 @@ export function parseGeminiResponse(
 		return {
 			category: parsedResponse.category as Categories,
 			confidence: Math.round(confidence * 100) / 100,
+			reasoning: parsedResponse.reasoning,
 		};
 	} catch (error) {
 		console.error("Erro ao parsear resposta do Gemini:", error);
@@ -44,7 +65,8 @@ export function parseGeminiResponse(
 
 		return {
 			category: Categories.Outros,
-			confidence: 0.3,
+			confidence: 0,
+			reasoning: "Resposta inválida",
 		};
 	}
 }

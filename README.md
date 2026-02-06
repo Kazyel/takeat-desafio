@@ -92,32 +92,8 @@ curl -X POST http://localhost:3000/classify \
 ```json
 {
   "category": "PEDIDO_CARDAPIO",
-  "confidence": 0.95
-}
-```
-
----
-
-#### 3️⃣ **POST /classify/context** - Classificar com contexto
-
-```bash
-curl -X POST http://localhost:8080/api/v1/classify/context \
-  -H "Content-Type: application/json" \
-  -d '{
-    "messages": [
-      { "role": "user", "content": "Oi, boa noite" },
-      { "role": "assistant", "content": "Olá! Como posso ajudar?" },
-      { "role": "user", "content": "Já saiu pra entrega?" }
-    ]
-  }'
-```
-
-**Resposta:**
-
-```json
-{
-  "category": "STATUS_ENTREGA",
-  "confidence": 0.98
+  "confidence": 0.95,
+  "reasoning": "Mensagem pergunta sobre item do cardápio"
 }
 ```
 
