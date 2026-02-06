@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { Categories, type Conversation } from "@/lib/types";
+import { logger } from "@/middlewares/logger";
+import { parseApiError } from "./parse-api-error";
 
 const EXAMPLES_PATH = join(
 	process.cwd(),
@@ -39,7 +41,10 @@ export async function loadConversations(): Promise<Conversation[]> {
 
 		return allExamples;
 	} catch (error) {
-		console.error("Erro ao carregar exemplos:", error);
+		logger.error({
+			event: "load_examples_failed",
+			error: parseApiError(error),
+		});
 		throw new Error(`Falha ao carregar arquivo de exemplos: ${error}`);
 	}
 }

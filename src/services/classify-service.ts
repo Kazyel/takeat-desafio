@@ -9,6 +9,7 @@ import type {
 	MessageWithContext,
 } from "@/lib/schemas/classify.schema";
 import { BasicCache } from "@/lib/utils/basic-cache";
+import { logger } from "@/middlewares/logger";
 
 type ClassifyOptions = {
 	gemini?: GoogleGenAI;
@@ -26,11 +27,19 @@ export async function classifyMessage(
 	const key = cache.generateKey(message);
 
 	if (cache.has(key)) {
-		console.log("CACHE HIT", key);
-
+		logger.info({
+			event: "cache_hit",
+			messageKey: key,
+		});
 		const cachedValue = cache.get(key);
+
 		if (!cachedValue) {
-			throw new Error("Cached value is null");
+			logger.error({
+				event: "cache_error",
+				reason: "value_was_null",
+				key,
+			});
+			throw new Error("O valor do cache está nulo");
 		}
 
 		return cachedValue;
@@ -66,7 +75,12 @@ export async function classifyMessage(
 
 		return parsedResponse;
 	} catch (error) {
-		console.error("Erro durante a classificação:", error);
+		logger.error({
+			event: "classify_failed",
+			error: error instanceof Error ? error.message : String(error),
+			messagePreview: message.slice(0, 100),
+		});
+
 		throw new Error(`Falha ao classificar mensagem: ${error}`);
 	}
 }

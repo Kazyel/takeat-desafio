@@ -12,6 +12,8 @@ import type {
 } from "@/lib/schemas/metrics.schema";
 
 import type { ValidationResult } from "@/lib/schemas/validation.schema";
+import { parseApiError } from "@/lib/utils/parse-api-error";
+import { logger } from "@/middlewares/logger";
 
 import { validateAllExamples } from "@/services/validation-service";
 
@@ -73,7 +75,11 @@ export async function calculateDetailedMetrics(): Promise<MetricsResponse> {
 			categoryMetrics: metrics.categoryMetrics,
 		};
 	} catch (error) {
-		console.error("Erro ao calcular métricas detalhadas:", error);
+		logger.error({
+			event: "metrics_failed",
+			error: parseApiError(error),
+		});
+
 		return {
 			accuracy: 0,
 			totalExamples: 0,

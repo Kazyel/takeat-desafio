@@ -6,10 +6,12 @@ import type {
 import { Categories, type Conversation } from "@/lib/types";
 
 import { loadConversations } from "@/lib/utils/load-conversations";
+import { parseApiError } from "@/lib/utils/parse-api-error";
+import { logger } from "@/middlewares/logger";
 import { classifyMessage } from "@/services/classify-service";
 import { calculateMetrics } from "@/services/metrics-service";
 
-const VALIDATION_DELAY_MS = 5000;
+const VALIDATION_DELAY_MS = 8000;
 
 export async function validateExample(
 	example: Conversation,
@@ -28,7 +30,10 @@ export async function validateExample(
 			correct: category === expected_category,
 		};
 	} catch (error) {
-		console.error(`Erro ao validar exemplo ${id}:`, error);
+		logger.error({
+			event: "validate_example_failed",
+			error: parseApiError(error),
+		});
 
 		return {
 			id,
@@ -45,7 +50,7 @@ export async function validateAllExamples(): Promise<ValidationResponse> {
 	const allExamples = await loadConversations();
 	const validationResults: ValidationResult[] = [];
 
-	console.log(`🔍 Validando ${allExamples.length} exemplos...`);
+	logger.info(`🔍 Validando ${allExamples.length} exemplos...`);
 
 	for (let i = 0; i < allExamples.length; i++) {
 		const singleExample = allExamples[i];
@@ -56,7 +61,11 @@ export async function validateAllExamples(): Promise<ValidationResponse> {
 			const validatedResult = await validateExample(singleExample);
 			validationResults.push(validatedResult);
 		} catch (err) {
-			console.error(`Erro ao validar exemplo ${singleExample.id}:`, err);
+			logger.error({
+				event: "validate_example_failed",
+				exampleId: singleExample.id,
+				error: parseApiError(err),
+			});
 		}
 
 		if (i < allExamples.length - 1) {
@@ -66,7 +75,7 @@ export async function validateAllExamples(): Promise<ValidationResponse> {
 
 	const calculatedMetrics = calculateMetrics(validationResults);
 
-	console.log(
+	logger.info(
 		`✅ Validação concluída: ${calculatedMetrics.correctPredictions}/${allExamples.length} corretos (${calculatedMetrics.accuracy}%)`,
 	);
 

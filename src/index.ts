@@ -1,9 +1,8 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
-
+import { logger, pinoLogger } from "@/middlewares/logger";
 import { classifyRoute } from "@/routes/classify";
 import { metricsRoute } from "@/routes/metrics";
 import { validateRoute } from "@/routes/validate";
@@ -11,8 +10,8 @@ import { validateRoute } from "@/routes/validate";
 const app = new Hono().basePath("/api/v1");
 
 app.use("*", cors());
-app.use("*", logger());
 app.use("*", prettyJSON());
+app.use("*", pinoLogger);
 
 app.get("/", (c) => {
 	return c.json({
@@ -51,7 +50,7 @@ app.route("/validate", validateRoute);
 app.route("/metrics", metricsRoute);
 
 const startServer = async () => {
-	console.log("Iniciando servidor...");
+	logger.info("Iniciando servidor...");
 	serve({
 		fetch: app.fetch,
 		port: 8080,

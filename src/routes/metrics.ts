@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { metricsResponseSchema } from "@/lib/schemas/metrics.schema";
 import { parseApiError } from "@/lib/utils/parse-api-error";
+import { logger } from "@/middlewares/logger";
 import { calculateDetailedMetrics } from "@/services/metrics-service";
 
 export const metricsRoute = new Hono();
@@ -11,7 +12,10 @@ metricsRoute.get("/", async (c) => {
 		const parsedMetrics = metricsResponseSchema.safeParse(calculatedMetrics);
 
 		if (!parsedMetrics.success) {
-			console.error("Métricas inválidas geradas:", parsedMetrics.error);
+			logger.error({
+				event: "metrics_invalid",
+				error: parsedMetrics.error,
+			});
 
 			return c.json(
 				{
@@ -24,7 +28,10 @@ metricsRoute.get("/", async (c) => {
 
 		return c.json(parsedMetrics.data);
 	} catch (error) {
-		console.error("Erro no endpoint /metrics:", parseApiError(error));
+		logger.error({
+			event: "metrics_failed",
+			error: parseApiError(error),
+		});
 
 		return c.json(
 			{
