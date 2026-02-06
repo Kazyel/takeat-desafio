@@ -11,15 +11,17 @@ import { logger } from "@/middlewares/logger";
 import { classifyMessage } from "@/services/classify-service";
 import { calculateMetrics } from "@/services/metrics-service";
 
-const VALIDATION_DELAY_MS = 8000;
+const VALIDATION_DELAY_MS = 4000;
 
 export async function validateExample(
 	example: Conversation,
-): Promise<ValidationResult> {
+): Promise<ValidationResult & { fromCache: boolean }> {
 	const { id, message, expected_category } = example;
 
 	try {
-		const { category, confidence } = await classifyMessage(example.message);
+		const { category, confidence, fromCache } = await classifyMessage(
+			example.message,
+		);
 
 		return {
 			id: id,
@@ -28,6 +30,7 @@ export async function validateExample(
 			predicted: category,
 			confidence: confidence,
 			correct: category === expected_category,
+			fromCache,
 		};
 	} catch (error) {
 		logger.error({
@@ -42,6 +45,7 @@ export async function validateExample(
 			predicted: Categories.Outros,
 			confidence: 0,
 			correct: false,
+			fromCache: false,
 		};
 	}
 }
@@ -56,10 +60,15 @@ export async function validateAllExamples(): Promise<ValidationResponse> {
 		const singleExample = allExamples[i];
 
 		logProgress(i, allExamples.length, singleExample.id);
+		let fromCache = false;
 
 		try {
 			const validatedResult = await validateExample(singleExample);
-			validationResults.push(validatedResult);
+			fromCache = validatedResult.fromCache;
+
+			const result = { ...validatedResult, fromCache: undefined };
+
+			validationResults.push(result);
 		} catch (err) {
 			logger.error({
 				event: "validate_example_failed",
@@ -68,8 +77,8 @@ export async function validateAllExamples(): Promise<ValidationResponse> {
 			});
 		}
 
-		if (i < allExamples.length - 1) {
-			delay(VALIDATION_DELAY_MS);
+		if (i < allExamples.length - 1 && !fromCache) {
+			await delay(VALIDATION_DELAY_MS);
 		}
 	}
 
