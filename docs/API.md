@@ -47,11 +47,8 @@ Esta API não requer autenticação atualmente. A chave do Gemini é configurada
   "endpoints": {
     "health": "GET /health",
     "classify": "POST /classify",
-    "classifyWithContext": "POST /classify/context",
-    "validate": "POST /validate",
-    "validateByCategory": "GET /validate/category/:category",
-    "metrics": "GET /metrics",
-    "examplesStats": "GET /examples/stats"
+    "validate": "GET /validate",
+    "metrics": "GET /metrics"
   },
   "categories": [
     "PEDIDO_CARDAPIO",
