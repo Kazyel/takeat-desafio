@@ -87,6 +87,8 @@ export async function classifyMessage(
 			messagePreview: message.slice(0, 100),
 		});
 
-		throw new Error(`Falha ao classificar mensagem: ${error}`);
+		throw new Error(
+			`Classificação falhou: ${error instanceof Error ? error.message : String(error)}`,
+		);
 	}
 }
