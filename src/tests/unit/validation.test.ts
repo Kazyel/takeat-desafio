@@ -1,7 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { getUniqueCategories } from "@/lib/helpers/metrics-helpers";
 import { Categories } from "@/lib/types";
 import { loadConversations } from "@/lib/utils/load-conversations";
+import { validateExample } from "@/services/validation-service";
+
+vi.mock("@/services/classify-service", () => {
+	return {
+		classifyMessage: vi.fn().mockRejectedValue(new Error("gemini error")),
+	};
+});
 
 describe("Carregar exemplos de conversas", () => {
 	it("Deve carregar os exemplos do arquivo JSON corretamente", async () => {
@@ -51,5 +58,25 @@ describe("Carregar exemplos de conversas", () => {
 		);
 
 		expect(hasExamples).toBe(false);
+	});
+
+	it("Retorna fallback result quando classifyMessage falha", async () => {
+		const example = {
+			id: 999,
+			message: "Mensagem de teste",
+			expected_category: Categories.PedidoCardapio,
+		} as {
+			id: number;
+			message: string;
+			expected_category: Categories;
+		};
+
+		const result = await validateExample(example);
+
+		expect(result).toBeDefined();
+		expect(result.id).toBe(example.id);
+		expect(result.predicted).toBe(Categories.Outros);
+		expect(result.confidence).toBe(0);
+		expect(result.correct).toBe(false);
 	});
 });

@@ -1,4 +1,9 @@
 import { describe, expect, it } from "vitest";
+import {
+	calculateF1Score,
+	calculatePrecision,
+	calculateRecall,
+} from "@/lib/helpers/metrics-helpers";
 import type { ValidationResult } from "@/lib/schemas/validation.schema";
 import { Categories } from "@/lib/types";
 import { calculateMetrics } from "@/services/metrics-service";
@@ -147,6 +152,12 @@ describe("Calcular métricas", () => {
 		expect(ElogioMetrics?.recall).toBe(0);
 		expect(ElogioMetrics?.f1Score).toBe(0);
 		expect(ElogioMetrics?.samples).toBe(0);
+	});
+
+	it("Deve retornar 0 quando denominadores forem zero", () => {
+		expect(calculatePrecision(0, 0)).toBe(0);
+		expect(calculateRecall(0, 0)).toBe(0);
+		expect(calculateF1Score(0, 0, 0)).toBe(0);
 	});
 
 	it("Deve ter métricas para todas as 5 categorias", () => {

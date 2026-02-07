@@ -11,7 +11,7 @@ import { logger } from "@/middlewares/logger";
 import { classifyMessage } from "@/services/classify-service";
 import { calculateMetrics } from "@/services/metrics-service";
 
-const VALIDATION_DELAY_MS = 4000;
+const VALIDATION_DELAY_MS = 3000;
 
 export async function validateExample(
 	example: Conversation,
