@@ -72,7 +72,7 @@ http://localhost:8080/api/v1
 
 ### 🔍 Endpoints Disponíveis
 
-#### 1️⃣ **GET /** - Informações da API
+#### **GET /** - Informações da API
 
 ```bash
 curl http://localhost:8080/api/v1
@@ -92,7 +92,7 @@ curl http://localhost:8080/api/v1
 
 ---
 
-#### 2️⃣ **POST /classify** - Classificar mensagem simples
+#### **POST /classify** - Classificar mensagem simples
 
 ```bash
 curl -X POST http://localhost:8080/api/v1/classify \
@@ -114,7 +114,7 @@ curl -X POST http://localhost:8080/api/v1/classify \
 
 ---
 
-#### 2️⃣ **POST /classify** - Classificar mensagem com contexto
+#### **POST /classify** - Classificar mensagem com contexto
 
 ```bash
 curl -X POST http://localhost:8080/api/v1/classify \
@@ -139,7 +139,7 @@ curl -X POST http://localhost:8080/api/v1/classify \
 
 ---
 
-#### 4️⃣ **POST /validate** - Validar modelo contra exemplos
+#### **POST /validate** - Validar modelo contra exemplos
 
 ```bash
 curl -X POST http://localhost:8080/api/v1/validate
@@ -158,7 +158,7 @@ curl -X POST http://localhost:8080/api/v1/validate
 
 ---
 
-#### 5️⃣ **GET /metrics** - Métricas detalhadas
+#### **GET /metrics** - Métricas detalhadas
 
 ```bash
 curl http://localhost:8080/api/v1/metrics
@@ -186,7 +186,7 @@ curl http://localhost:8080/api/v1/metrics
 
 ---
 
-#### 8️⃣ **GET /health** - Health check
+#### **GET /health** - Health check
 
 ```bash
 curl http://localhost:8080/api/v1/health

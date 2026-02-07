@@ -204,7 +204,7 @@ Esta API não requer autenticação atualmente. A chave do Gemini é configurada
 
 ---
 
-### 7. Métricas Detalhadas
+### 6. Métricas Detalhadas
 
 **Endpoint:** `GET /metrics`
 
